@@ -1,17 +1,97 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Classical Notes</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI Opus • Generative Classical Music</title>
+  <!-- Google Fonts: Cormorant Garamond & Cinzel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="card">
-  <h1>Classical</h1>
-  <div class="staff"><span class="note">♪</span><span class="note">♫</span></div>
-  <button id="play">▶ 播放</button>
-</main>
-<script src="script.js"></script>
+  <!-- 背景動態音符 Canvas -->
+  <canvas id="music-canvas"></canvas>
+
+  <div class="mobile-container">
+    <!-- 頂部標頭 -->
+    <header class="header">
+      <span class="clef-symbol">𝄞</span>
+      <div class="header-title">
+        <span class="subtitle">OPUS AI LAB</span>
+        <span class="title">GENERATIVE NOCTURNE</span>
+      </div>
+      <div class="ai-status">
+        <span class="dot"></span>
+        <span class="status-text">LIVE</span>
+      </div>
+    </header>
+
+    <!-- 核心互動播放/生成區塊 -->
+    <main class="content">
+      <section class="hero-card">
+        <div class="card-border-line"></div>
+        <p class="movement-tag">MOVEMENT NO. 1 IN C MINOR</p>
+        <h1 class="main-heading">Algorithmic Elegance</h1>
+        <p class="description">
+          以古典對位法為底蘊，交融生成式神經網路。輕觸下方「發想」樂章，聆聽模型即時合成的琶音。
+        </p>
+
+        <!-- 視覺化樂譜線條 -->
+        <div class="staff-visualizer" id="visualizer">
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="staff-line"></div>
+          <div class="wave-bars" id="wave-bars">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </div>
+        </div>
+
+        <button class="generate-btn" id="generate-btn">
+          <span class="btn-icon">♪</span>
+          <span class="btn-text">Generate Cadence</span>
+          <span class="btn-ripple"></span>
+        </button>
+      </section>
+
+      <!-- 樂章專案卡片列表 -->
+      <section class="archive-section">
+        <h2 class="section-title"><span>✦</span> Curated Movemebts</h2>
+        
+        <div class="track-item" data-notes="261.63,329.63,392.00,523.25">
+          <div class="track-number">I</div>
+          <div class="track-info">
+            <h3>Prelude in AI-Minor</h3>
+            <p>Diffusion Model • 60 BPM • Piano Solo</p>
+          </div>
+          <div class="track-action">♫</div>
+        </div>
+
+        <div class="track-item" data-notes="220.00,277.18,329.63,440.00">
+          <div class="track-number">II</div>
+          <div class="track-info">
+            <h3>Nocturne d'Algorithme</h3>
+            <p>Transformer V2 • Rubato • Strings & Keys</p>
+          </div>
+          <div class="track-action">♫</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p class="footer-text">Fine-tuned with Classical Harmony • 2026</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
