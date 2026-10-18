@@ -82,8 +82,8 @@ const COMPOSERS_ARCHIVE = [
   }
 ];
 
-// 高效背景飄浮音符 Canvas (修復旋轉螢幕與疊加渲染 Bug)
-class AmbientNotesBackground {
+// 桌面高解析度音符背景 Canvas (依視窗寬度動態調整密度)
+class DesktopAmbientNotes {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
@@ -104,7 +104,7 @@ class AmbientNotesBackground {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
 
-    // 重新調整越界粒子
+    // 螢幕尺寸改變時自動調節粒子
     this.particles.forEach((p) => {
       if (p.x > this.canvas.width) p.x = Math.random() * this.canvas.width;
       if (p.y > this.canvas.height) p.y = Math.random() * this.canvas.height;
@@ -112,17 +112,18 @@ class AmbientNotesBackground {
   }
 
   init() {
-    const count = Math.floor(window.innerWidth / 32);
+    // 依桌面端寬度計算最適密度 (大螢幕約 40-50 顆粒子，保持留白美感)
+    const count = Math.min(Math.floor(window.innerWidth / 35), 55);
     this.particles = [];
     for (let i = 0; i < count; i++) {
       this.particles.push({
         x: Math.random() * this.canvas.width,
         y: Math.random() * this.canvas.height,
         symbol: this.symbols[Math.floor(Math.random() * this.symbols.length)],
-        size: Math.random() * 12 + 13,
+        size: Math.random() * 14 + 14,
         speedY: Math.random() * 0.35 + 0.15,
-        speedX: (Math.random() - 0.5) * 0.2,
-        opacity: Math.random() * 0.35 + 0.1
+        speedX: (Math.random() - 0.5) * 0.18,
+        opacity: Math.random() * 0.35 + 0.08
       });
     }
   }
@@ -145,12 +146,12 @@ class AmbientNotesBackground {
       p.y -= p.speedY;
       p.x += p.speedX;
 
-      if (p.y < -20) {
-        p.y = this.canvas.height + 20;
+      if (p.y < -24) {
+        p.y = this.canvas.height + 24;
         p.x = Math.random() * this.canvas.width;
       }
-      if (p.x < -20) p.x = this.canvas.width + 20;
-      if (p.x > this.canvas.width + 20) p.x = -20;
+      if (p.x < -24) p.x = this.canvas.width + 24;
+      if (p.x > this.canvas.width + 24) p.x = -24;
     });
 
     this.animationId = requestAnimationFrame(this.render);
@@ -160,7 +161,7 @@ class AmbientNotesBackground {
 // 頁面主控
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('ambient-canvas');
-  new AmbientNotesBackground(canvas);
+  new DesktopAmbientNotes(canvas);
 
   let currentMaestro = COMPOSERS_ARCHIVE[0];
   let currentEra = 'all';
@@ -175,9 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const composerBio = document.getElementById('composer-bio');
   const piecesList = document.getElementById('pieces-list');
   const maestroGrid = document.getElementById('maestro-grid');
-  const eraPills = document.querySelectorAll('.era-pill');
+  const eraButtons = document.querySelectorAll('.era-button');
 
-  // 切換與呈現作曲家卡片 (修復 XSS 風險，改採標準 DOM 構建)
+  // 更新主卡片內容
   function updateShowcase(composer) {
     currentMaestro = composer;
 
@@ -192,23 +193,23 @@ document.addEventListener('DOMContentLoaded', () => {
       composerQuote.textContent = composer.quote;
       composerBio.textContent = composer.bio;
 
-      // 安全清空並組裝作品 DOM
+      // 構建作品清單
       piecesList.innerHTML = '';
       const fragment = document.createDocumentFragment();
 
       composer.masterpieces.forEach((piece) => {
         const li = document.createElement('li');
-        li.className = 'piece-row';
+        li.className = 'piece-item';
 
-        const titleSpan = document.createElement('span');
-        titleSpan.className = 'piece-title';
-        titleSpan.textContent = piece.name;
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'piece-name';
+        nameSpan.textContent = piece.name;
 
         const keySpan = document.createElement('span');
         keySpan.className = 'piece-key';
         keySpan.textContent = piece.key;
 
-        li.appendChild(titleSpan);
+        li.appendChild(nameSpan);
         li.appendChild(keySpan);
         fragment.appendChild(li);
       });
@@ -221,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 180);
   }
 
-  // 渲染名錄卡片
+  // 渲染右側畫廊卡片
   function renderGallery(filterEra = 'all') {
     maestroGrid.innerHTML = '';
     const filtered = filterEra === 'all'
@@ -237,11 +238,11 @@ document.addEventListener('DOMContentLoaded', () => {
       card.setAttribute('aria-label', `${c.name}, ${c.eraLabel}`);
 
       const nameSpan = document.createElement('span');
-      nameSpan.className = 'maestro-name';
+      nameSpan.className = 'maestro-card-name';
       nameSpan.textContent = c.name;
 
       const eraSpan = document.createElement('span');
-      eraSpan.className = 'maestro-era';
+      eraSpan.className = 'maestro-card-era';
       eraSpan.textContent = c.eraLabel;
 
       card.appendChild(nameSpan);
@@ -260,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 同步卡片選中樣式
+  // 同步卡片高亮狀態
   function syncActiveState() {
     document.querySelectorAll('.maestro-card').forEach((card) => {
       const isSelected = card.getAttribute('data-id') === currentMaestro.id;
@@ -274,18 +275,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 樂派標籤切換（修正狀態連動與 A11y 標記）
-  eraPills.forEach((pill) => {
-    pill.addEventListener('click', () => {
-      eraPills.forEach((p) => {
-        p.classList.remove('active');
-        p.setAttribute('aria-selected', 'false');
+  // 樂派按鈕切換
+  eraButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      eraButtons.forEach((b) => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
       });
 
-      pill.classList.add('active');
-      pill.setAttribute('aria-selected', 'true');
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
 
-      currentEra = pill.getAttribute('data-era');
+      currentEra = btn.getAttribute('data-era');
       renderGallery(currentEra);
 
       // 若目前選中的作曲家不屬於新選的樂派，自動平滑切換至新樂派的第一位作曲家
