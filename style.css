@@ -4,7 +4,6 @@
   --card-bg: rgba(22, 27, 36, 0.85);
   --gold-primary: #d4af37;
   --gold-light: #f5e4b7;
-  --gold-dark: #8c7322;
   --gold-glow: rgba(212, 175, 55, 0.28);
   --ivory: #eae5db;
   --ivory-dim: #a49f95;
@@ -105,17 +104,19 @@ body {
   user-select: none;
 }
 
-/* 樂派切換橫條 */
+/* 樂派切換橫條（完整修復隱藏滾動條與 iOS 慣性滑動） */
 .era-nav {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding: 16px 0;
-  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none; /* 舊版 Edge / IE */
+  scrollbar-width: none;    /* Firefox */
 }
 
 .era-nav::-webkit-scrollbar {
-  display: none;
+  display: none;            /* Chrome, Safari, Opera */
 }
 
 .era-tab {
@@ -129,7 +130,8 @@ body {
   border-radius: 20px;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
 }
 
 .era-tab.active,
@@ -138,6 +140,11 @@ body {
   border-color: var(--gold-primary);
   color: var(--gold-light);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.era-tab:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 2px;
 }
 
 /* 作曲家主卡片 */
@@ -150,7 +157,8 @@ body {
   border-radius: 14px;
   padding: 24px 20px;
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  will-change: opacity, transform;
 }
 
 /* 典雅邊角裝飾 */
@@ -211,7 +219,7 @@ body {
   margin-bottom: 14px;
 }
 
-/* 五線譜裝飾分隔線 */
+/* 五線譜裝飾分隔線（防止阻礙觸控） */
 .staff-divider {
   display: flex;
   flex-direction: column;
@@ -219,6 +227,7 @@ body {
   height: 16px;
   margin: 14px 0 18px;
   opacity: 0.45;
+  pointer-events: none;
 }
 
 .staff-divider span {
@@ -288,7 +297,7 @@ body {
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.2s ease, background 0.25s ease, box-shadow 0.25s ease;
   user-select: none;
 }
 
@@ -296,6 +305,11 @@ body {
   transform: scale(0.97);
   background: rgba(212, 175, 55, 0.3);
   box-shadow: 0 0 16px var(--gold-glow);
+}
+
+.play-motif-btn:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
 }
 
 .btn-icon {
@@ -330,13 +344,24 @@ body {
   border: 1px solid rgba(212, 175, 55, 0.14);
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   text-align: left;
+  user-select: none;
+}
+
+.composer-chip:active {
+  transform: scale(0.98);
 }
 
 .composer-chip.active {
   border-color: var(--gold-primary);
-  background: rgba(212, 175, 55, 0.12);
+  background: rgba(212, 175, 55, 0.15);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.12);
+}
+
+.composer-chip:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 2px;
 }
 
 .chip-name {
@@ -366,6 +391,7 @@ body {
   color: var(--gold-primary);
   opacity: 0.6;
   margin-bottom: 6px;
+  user-select: none;
 }
 
 .footer-desc {
