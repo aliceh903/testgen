@@ -1,13 +1,13 @@
 :root {
   --bg-core: #0c0e12;
-  --bg-gradient: radial-gradient(ellipse at 50% 12%, #191e28 0%, #0c0e12 85%);
+  --bg-gradient: radial-gradient(ellipse at 50% 10%, #1a1f29 0%, #0c0e12 80%);
   --card-surface: rgba(22, 27, 36, 0.85);
   --gold-primary: #d4af37;
   --gold-light: #f7e7be;
   --gold-glow: rgba(212, 175, 55, 0.25);
   --ivory-base: #ede8df;
-  --ivory-muted: #a19c92;
-  --line-gold: rgba(212, 175, 55, 0.16);
+  --ivory-muted: #a39e94;
+  --line-gold: rgba(212, 175, 55, 0.18);
   --font-serif: 'Cormorant Garamond', 'Georgia', serif;
   --font-display: 'Cinzel', serif;
 }
@@ -30,211 +30,182 @@ body {
   color: var(--ivory-base);
   font-family: var(--font-serif);
   min-height: 100vh;
-  min-height: 100dvh; /* 適配動態網址列高度 */
   position: relative;
   overflow-x: hidden;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* 漂浮音符背景 Canvas */
+/* 漂浮音符背景 Canvas (全螢幕漫遊) */
 #ambient-canvas {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  height: 100dvh;
   pointer-events: none;
   z-index: 0;
   opacity: 0.45;
 }
 
-.mobile-layout {
+/* 桌面標準容器 (1200px 寬度規格) */
+.site-wrapper {
   position: relative;
   z-index: 1;
-  max-width: 440px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 22px 20px 36px;
+  padding: 32px 36px 48px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  min-height: 100dvh;
 }
 
 /* 頁頭 */
-.header {
+.site-header {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line-gold);
+  margin-bottom: 36px;
+}
+
+.header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--line-gold);
 }
 
-.clef {
-  font-size: 2.3rem;
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.clef-symbol {
+  font-size: 3rem;
   color: var(--gold-primary);
   line-height: 1;
-  text-shadow: 0 0 12px var(--gold-glow);
+  text-shadow: 0 0 14px var(--gold-glow);
   user-select: none;
-  -webkit-user-select: none;
 }
 
-.header-titles {
-  text-align: center;
-}
-
-.eyebrow {
+.brand-text .sub-label {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   letter-spacing: 0.28em;
   color: var(--gold-light);
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
-.main-title {
+.brand-text .main-title {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   color: var(--ivory-base);
 }
 
-.meter {
+.header-ornament {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.meter-symbol {
   display: flex;
   flex-direction: column;
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 0.85;
   color: var(--gold-primary);
-  opacity: 0.75;
+  opacity: 0.8;
   user-select: none;
-  -webkit-user-select: none;
 }
 
-/* 樂派橫向標籤列 */
-.era-scroller {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 16px 0;
-  -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.era-scroller::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
-.era-pill {
-  background: rgba(212, 175, 55, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  color: var(--ivory-muted);
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  padding: 7px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.era-pill.active,
-.era-pill:active {
-  background: rgba(212, 175, 55, 0.18);
-  border-color: var(--gold-primary);
+.tempo-marking {
+  font-size: 1.05rem;
+  font-style: italic;
   color: var(--gold-light);
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+  opacity: 0.75;
+  letter-spacing: 0.08em;
 }
 
-.era-pill:active {
-  transform: scale(0.96);
+/* 主內容區：桌面雙欄版型 */
+.main-container {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 36px;
+  align-items: start;
 }
 
-.era-pill:focus-visible {
-  outline: 2px solid var(--gold-primary);
-  outline-offset: 2px;
-}
-
-/* 主展卡片 */
-.composer-showcase {
+/* 左側：主展卡片 */
+.composer-card {
   position: relative;
   background: var(--card-surface);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--line-gold);
-  border-radius: 14px;
-  padding: 26px 22px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  padding: 38px 36px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
   transition: opacity 0.25s ease, transform 0.25s ease;
   will-change: opacity, transform;
 }
 
-/* 典雅邊角花紋 */
+/* 邊角飾紋 */
 .card-filigree {
   position: absolute;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   border-color: var(--gold-primary);
   pointer-events: none;
-  box-sizing: border-box;
 }
 
 .card-filigree.top-left {
-  top: 9px;
-  left: 9px;
+  top: 10px;
+  left: 10px;
   border-top: 1px solid var(--gold-primary);
   border-left: 1px solid var(--gold-primary);
 }
 
 .card-filigree.bottom-right {
-  bottom: 9px;
-  right: 9px;
+  bottom: 10px;
+  right: 10px;
   border-bottom: 1px solid var(--gold-primary);
   border-right: 1px solid var(--gold-primary);
 }
 
-.composer-header {
+.card-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .era-tag {
   font-family: var(--font-display);
-  font-size: 0.65rem;
-  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
   color: var(--gold-primary);
   text-transform: uppercase;
 }
 
-.timeline-tag {
-  font-size: 0.88rem;
+.lifespan-tag {
+  font-size: 0.95rem;
   color: var(--ivory-muted);
   font-style: italic;
 }
 
 .composer-name {
   font-family: var(--font-display);
-  font-size: 1.7rem;
+  font-size: 2.2rem;
   color: var(--gold-light);
   line-height: 1.2;
 }
 
-.composer-subtitle {
-  font-size: 0.95rem;
+.composer-title {
+  font-size: 1.1rem;
   color: var(--ivory-muted);
-  margin-top: 3px;
-  margin-bottom: 14px;
+  margin-top: 4px;
+  margin-bottom: 16px;
 }
 
 /* 五線譜裝飾線 */
@@ -242,8 +213,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 16px;
-  margin: 12px 0 18px;
+  height: 18px;
+  margin: 16px 0 22px;
   opacity: 0.45;
   pointer-events: none;
 }
@@ -257,116 +228,177 @@ body {
 
 /* 引言 */
 .composer-quote {
-  font-size: 0.98rem;
+  font-size: 1.1rem;
   font-style: italic;
   color: var(--gold-light);
-  line-height: 1.6;
+  line-height: 1.65;
+  border-left: 3px solid var(--gold-primary);
+  padding-left: 16px;
+  margin-bottom: 20px;
+  opacity: 0.92;
+}
+
+.composer-bio {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--ivory-base);
+  margin-bottom: 28px;
+}
+
+/* 作品列表 */
+.repertoire-section {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 20px 22px;
   border-left: 2px solid var(--gold-primary);
-  padding-left: 12px;
-  margin-bottom: 16px;
-  opacity: 0.9;
 }
 
-.composer-biography {
-  font-size: 0.95rem;
-  line-height: 1.68;
-  color: var(--ivory-base);
-  margin-bottom: 22px;
-}
-
-/* 作品清單 */
-.masterpieces-block {
-  background: rgba(0, 0, 0, 0.28);
-  border-radius: 8px;
-  padding: 14px 16px;
-  border-left: 1px solid var(--gold-primary);
-}
-
-.block-heading {
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  color: var(--gold-primary);
-  margin-bottom: 10px;
-}
-
-.pieces-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.piece-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  border-bottom: 1px dashed rgba(212, 175, 55, 0.12);
-  padding-bottom: 6px;
-}
-
-.piece-row:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.piece-title {
-  font-size: 0.9rem;
-  color: var(--ivory-base);
-  line-height: 1.4;
-}
-
-.piece-key {
-  font-size: 0.75rem;
-  color: var(--gold-light);
-  font-family: var(--font-display);
-  margin-left: 10px;
-  white-space: nowrap;
-  opacity: 0.8;
-}
-
-/* 作曲家名錄選單 */
-.archive-gallery {
-  margin-top: 28px;
-}
-
-.gallery-heading {
+.section-label {
   font-family: var(--font-display);
   font-size: 0.8rem;
   letter-spacing: 0.18em;
   color: var(--gold-primary);
   margin-bottom: 14px;
+}
+
+.piece-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.piece-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.14);
+  padding-bottom: 8px;
+  transition: padding-left 0.2s ease, color 0.2s ease;
+}
+
+.piece-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.piece-item:hover {
+  padding-left: 6px;
+}
+
+.piece-name {
+  font-size: 1rem;
+  color: var(--ivory-base);
+  line-height: 1.4;
+}
+
+.piece-key {
+  font-size: 0.82rem;
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  margin-left: 16px;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+/* 右側：樂派過濾列與畫廊 */
+.gallery-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.era-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.era-button {
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: var(--ivory-muted);
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  padding: 8px 16px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.era-button:hover {
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--ivory-base);
+  border-color: var(--gold-primary);
+}
+
+.era-button.active {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+}
+
+.era-button:focus-visible {
+  outline: 2px solid var(--gold-primary);
+  outline-offset: 2px;
+}
+
+.gallery-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line-gold);
+  padding-bottom: 10px;
+}
+
+.gallery-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-primary);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.catalog-hint {
+  font-size: 0.8rem;
+  color: var(--ivory-muted);
+  font-style: italic;
+}
+
+/* 畫廊網格 */
 .maestro-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 14px;
 }
 
 .maestro-card {
-  padding: 12px 14px;
-  background: rgba(22, 27, 36, 0.6);
+  padding: 18px 16px;
+  background: rgba(22, 27, 36, 0.65);
   border: 1px solid rgba(212, 175, 55, 0.14);
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  transition: transform 0.2s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
   text-align: left;
   user-select: none;
-  -webkit-user-select: none;
 }
 
-.maestro-card:active {
-  transform: scale(0.98);
+.maestro-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 175, 55, 0.45);
+  background: rgba(22, 27, 36, 0.9);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 
 .maestro-card.active {
   border-color: var(--gold-primary);
   background: rgba(212, 175, 55, 0.15);
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.12);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.18);
 }
 
 .maestro-card:focus-visible {
@@ -374,40 +406,65 @@ body {
   outline-offset: 2px;
 }
 
-.maestro-name {
+.maestro-card-name {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   color: var(--ivory-base);
+  margin-bottom: 4px;
 }
 
-.maestro-era {
+.maestro-card-era {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   color: var(--ivory-muted);
-  margin-top: 3px;
 }
 
 /* 頁尾 */
-.footer {
+.site-footer {
   margin-top: auto;
-  padding-top: 34px;
+  padding-top: 54px;
   text-align: center;
 }
 
-.pedal-sign {
-  font-size: 1rem;
+.pedal-ornament {
+  font-size: 1.1rem;
   letter-spacing: 0.25em;
   color: var(--gold-primary);
   opacity: 0.55;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   user-select: none;
-  -webkit-user-select: none;
 }
 
-.footer-caption {
-  font-size: 0.72rem;
+.footer-note {
+  font-size: 0.85rem;
   color: var(--ivory-muted);
   font-style: italic;
   letter-spacing: 0.05em;
+}
+
+/* 響應式：平板與筆電小螢幕折疊適配 */
+@media (max-width: 991px) {
+  .site-wrapper {
+    padding: 24px 20px 40px;
+  }
+
+  .main-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .header-ornament {
+    display: none;
+  }
+
+  .composer-name {
+    font-size: 1.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .maestro-grid {
+    grid-template-columns: 1fr;
+  }
 }
