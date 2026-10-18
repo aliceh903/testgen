@@ -1,13 +1,13 @@
 :root {
-  --bg-deep: #0b0d10;
-  --bg-gradient: radial-gradient(circle at 50% 15%, #181d26 0%, #0b0d10 80%);
-  --card-bg: rgba(22, 27, 36, 0.85);
+  --bg-core: #0c0e12;
+  --bg-gradient: radial-gradient(circle at 50% 12%, #191e28 0%, #0c0e12 85%);
+  --card-surface: rgba(22, 27, 36, 0.82);
   --gold-primary: #d4af37;
-  --gold-light: #f5e4b7;
-  --gold-glow: rgba(212, 175, 55, 0.28);
-  --ivory: #eae5db;
-  --ivory-dim: #a49f95;
-  --line-gold: rgba(212, 175, 55, 0.18);
+  --gold-light: #f7e7be;
+  --gold-glow: rgba(212, 175, 55, 0.25);
+  --ivory-base: #ede8df;
+  --ivory-muted: #a19c92;
+  --line-gold: rgba(212, 175, 55, 0.16);
   --font-serif: 'Cormorant Garamond', 'Georgia', serif;
   --font-display: 'Cinzel', serif;
 }
@@ -20,9 +20,9 @@
 }
 
 body {
-  background: var(--bg-deep);
+  background: var(--bg-core);
   background-image: var(--bg-gradient);
-  color: var(--ivory);
+  color: var(--ivory-base);
   font-family: var(--font-serif);
   min-height: 100vh;
   position: relative;
@@ -32,7 +32,7 @@ body {
 }
 
 /* 漂浮音符背景 Canvas */
-#notes-canvas {
+#ambient-canvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -43,12 +43,12 @@ body {
   opacity: 0.45;
 }
 
-.mobile-container {
+.mobile-layout {
   position: relative;
   z-index: 1;
   max-width: 440px;
   margin: 0 auto;
-  padding: 20px 20px 36px;
+  padding: 22px 20px 36px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -63,106 +63,113 @@ body {
   border-bottom: 1px solid var(--line-gold);
 }
 
-.clef-box {
-  font-size: 2.2rem;
+.clef {
+  font-size: 2.3rem;
   color: var(--gold-primary);
   line-height: 1;
   text-shadow: 0 0 12px var(--gold-glow);
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .header-titles {
   text-align: center;
 }
 
-.collection-tag {
+.eyebrow {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   letter-spacing: 0.28em;
   color: var(--gold-light);
   opacity: 0.8;
 }
 
-.brand-title {
+.main-title {
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.16em;
-  color: var(--ivory);
+  color: var(--ivory-base);
 }
 
-.time-signature {
+.meter {
   display: flex;
   flex-direction: column;
   font-family: var(--font-serif);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   line-height: 0.85;
   color: var(--gold-primary);
   opacity: 0.75;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-/* 樂派切換橫條（完整修復隱藏滾動條與 iOS 慣性滑動） */
-.era-nav {
+/* 樂派橫向標籤列 (強化滾動體驗與相容性) */
+.era-scroller {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding: 16px 0;
   -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none; /* 舊版 Edge / IE */
-  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.era-nav::-webkit-scrollbar {
-  display: none;            /* Chrome, Safari, Opera */
+.era-scroller::-webkit-scrollbar {
+  display: none;
 }
 
-.era-tab {
+.era-pill {
   background: rgba(212, 175, 55, 0.05);
   border: 1px solid rgba(212, 175, 55, 0.2);
-  color: var(--ivory-dim);
+  color: var(--ivory-muted);
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
-  padding: 6px 14px;
+  padding: 7px 14px;
   border-radius: 20px;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-.era-tab.active,
-.era-tab:active {
+.era-pill.active,
+.era-pill:active {
   background: rgba(212, 175, 55, 0.18);
   border-color: var(--gold-primary);
   color: var(--gold-light);
   box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
 }
 
-.era-tab:focus-visible {
+.era-pill:active {
+  transform: scale(0.96);
+}
+
+.era-pill:focus-visible {
   outline: 2px solid var(--gold-primary);
   outline-offset: 2px;
 }
 
-/* 作曲家主卡片 */
-.composer-hero-card {
+/* 主展卡片 */
+.composer-showcase {
   position: relative;
-  background: var(--card-bg);
+  background: var(--card-surface);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--line-gold);
   border-radius: 14px;
-  padding: 24px 20px;
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
+  padding: 26px 22px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
   transition: opacity 0.25s ease, transform 0.25s ease;
   will-change: opacity, transform;
 }
 
 /* 典雅邊角裝飾 */
-.gold-corner {
+.card-filigree {
   position: absolute;
   width: 14px;
   height: 14px;
@@ -170,28 +177,28 @@ body {
   pointer-events: none;
 }
 
-.gold-corner.top-left {
-  top: 8px;
-  left: 8px;
+.card-filigree.top-left {
+  top: 9px;
+  left: 9px;
   border-top: 1px solid var(--gold-primary);
   border-left: 1px solid var(--gold-primary);
 }
 
-.gold-corner.bottom-right {
-  bottom: 8px;
-  right: 8px;
+.card-filigree.bottom-right {
+  bottom: 9px;
+  right: 9px;
   border-bottom: 1px solid var(--gold-primary);
   border-right: 1px solid var(--gold-primary);
 }
 
-.composer-meta {
+.composer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.era-badge {
+.era-tag {
   font-family: var(--font-display);
   font-size: 0.65rem;
   letter-spacing: 0.16em;
@@ -199,33 +206,33 @@ body {
   text-transform: uppercase;
 }
 
-.years-label {
-  font-size: 0.85rem;
-  color: var(--ivory-dim);
+.timeline-tag {
+  font-size: 0.88rem;
+  color: var(--ivory-muted);
   font-style: italic;
 }
 
 .composer-name {
   font-family: var(--font-display);
-  font-size: 1.65rem;
+  font-size: 1.7rem;
   color: var(--gold-light);
   line-height: 1.2;
 }
 
-.composer-subname {
+.composer-subtitle {
   font-size: 0.95rem;
-  color: var(--ivory-dim);
-  margin-top: 2px;
+  color: var(--ivory-muted);
+  margin-top: 3px;
   margin-bottom: 14px;
 }
 
-/* 五線譜裝飾分隔線（防止阻礙觸控） */
+/* 五線譜裝飾線 (防點擊穿透保護) */
 .staff-divider {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 16px;
-  margin: 14px 0 18px;
+  margin: 12px 0 18px;
   opacity: 0.45;
   pointer-events: none;
 }
@@ -237,108 +244,99 @@ body {
   background: var(--gold-primary);
 }
 
-.composer-bio {
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: var(--ivory);
-  margin-bottom: 18px;
-}
-
-/* 代表曲清單 */
-.key-works {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 20px;
+/* 引言 */
+.composer-quote {
+  font-size: 0.98rem;
+  font-style: italic;
+  color: var(--gold-light);
+  line-height: 1.6;
   border-left: 2px solid var(--gold-primary);
+  padding-left: 12px;
+  margin-bottom: 16px;
+  opacity: 0.9;
 }
 
-.works-title {
-  display: block;
+.composer-biography {
+  font-size: 0.95rem;
+  line-height: 1.68;
+  color: var(--ivory-base);
+  margin-bottom: 22px;
+}
+
+/* 作品清單 */
+.masterpieces-block {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 8px;
+  padding: 14px 16px;
+  border-left: 1px solid var(--gold-primary);
+}
+
+.block-heading {
   font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   color: var(--gold-primary);
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
-.works-list {
+.pieces-list {
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.works-list li {
-  font-size: 0.88rem;
-  color: var(--ivory);
-  line-height: 1.5;
-  position: relative;
-  padding-left: 14px;
+.piece-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.12);
+  padding-bottom: 6px;
 }
 
-.works-list li::before {
-  content: "•";
-  position: absolute;
-  left: 2px;
-  color: var(--gold-primary);
+.piece-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-/* 試聽動機按鈕 */
-.play-motif-btn {
-  width: 100%;
-  padding: 13px 18px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
-  border: 1px solid var(--gold-primary);
-  border-radius: 28px;
+.piece-title {
+  font-size: 0.9rem;
+  color: var(--ivory-base);
+  line-height: 1.4;
+}
+
+.piece-key {
+  font-size: 0.75rem;
   color: var(--gold-light);
   font-family: var(--font-display);
-  font-size: 0.82rem;
-  letter-spacing: 0.15em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.25s ease, box-shadow 0.25s ease;
-  user-select: none;
+  margin-left: 10px;
+  white-space: nowrap;
+  opacity: 0.8;
 }
 
-.play-motif-btn:active {
-  transform: scale(0.97);
-  background: rgba(212, 175, 55, 0.3);
-  box-shadow: 0 0 16px var(--gold-glow);
-}
-
-.play-motif-btn:focus-visible {
-  outline: 2px solid var(--gold-light);
-  outline-offset: 2px;
-}
-
-.btn-icon {
-  font-size: 1.05rem;
-}
-
-/* 作曲家快速切換清單 */
-.composers-selector-section {
+/* 作曲家名錄選單 */
+.archive-gallery {
   margin-top: 28px;
 }
 
-.section-heading {
+.gallery-heading {
   font-family: var(--font-display);
   font-size: 0.8rem;
   letter-spacing: 0.18em;
   color: var(--gold-primary);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.composer-chips-grid {
+.maestro-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-.composer-chip {
+.maestro-card {
   padding: 12px 14px;
   background: rgba(22, 27, 36, 0.6);
   border: 1px solid rgba(212, 175, 55, 0.14);
@@ -347,56 +345,58 @@ body {
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
   text-align: left;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-.composer-chip:active {
+.maestro-card:active {
   transform: scale(0.98);
 }
 
-.composer-chip.active {
+.maestro-card.active {
   border-color: var(--gold-primary);
   background: rgba(212, 175, 55, 0.15);
   box-shadow: 0 0 12px rgba(212, 175, 55, 0.12);
 }
 
-.composer-chip:focus-visible {
+.maestro-card:focus-visible {
   outline: 2px solid var(--gold-primary);
   outline-offset: 2px;
 }
 
-.chip-name {
+.maestro-name {
   display: block;
   font-family: var(--font-display);
-  font-size: 0.85rem;
-  color: var(--ivory);
+  font-size: 0.86rem;
+  color: var(--ivory-base);
 }
 
-.chip-era {
+.maestro-era {
   display: block;
   font-size: 0.7rem;
-  color: var(--ivory-dim);
-  margin-top: 2px;
+  color: var(--ivory-muted);
+  margin-top: 3px;
 }
 
 /* 頁尾 */
 .footer {
   margin-top: auto;
-  padding-top: 32px;
+  padding-top: 34px;
   text-align: center;
 }
 
-.footer-pedal-mark {
-  font-size: 0.95rem;
-  letter-spacing: 0.2em;
+.pedal-sign {
+  font-size: 1rem;
+  letter-spacing: 0.25em;
   color: var(--gold-primary);
-  opacity: 0.6;
+  opacity: 0.55;
   margin-bottom: 6px;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-.footer-desc {
+.footer-caption {
   font-size: 0.72rem;
-  color: var(--ivory-dim);
+  color: var(--ivory-muted);
   font-style: italic;
   letter-spacing: 0.05em;
 }
