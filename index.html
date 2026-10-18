@@ -2,93 +2,93 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <!-- 加入 viewport-fit=cover 適配手機安全區域 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>AI Opus • Generative Classical Music</title>
-  <!-- Google Fonts: Cormorant Garamond & Cinzel -->
+  <title>Piano Maestros • 古典鋼琴名家巡禮</title>
+  <!-- Google Fonts: Cinzel & Cormorant Garamond -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- 背景動態音符 Canvas -->
-  <canvas id="music-canvas" aria-hidden="true"></canvas>
+  <!-- 背景飄浮古典音符與五線譜粒子 -->
+  <canvas id="notes-canvas" aria-hidden="true"></canvas>
 
   <div class="mobile-container">
-    <!-- 頂部標頭 -->
+    <!-- 典雅頁頭 -->
     <header class="header">
-      <span class="clef-symbol" aria-hidden="true">𝄞</span>
-      <div class="header-title">
-        <span class="subtitle">OPUS AI LAB</span>
-        <span class="title">GENERATIVE NOCTURNE</span>
+      <div class="clef-box" aria-hidden="true">𝄞</div>
+      <div class="header-titles">
+        <span class="collection-tag">PIANO ARCHIVE</span>
+        <h1 class="brand-title">LE SALON CLASSIQUE</h1>
       </div>
-      <div class="ai-status" aria-label="AI 狀態：即時連線">
-        <span class="dot" aria-hidden="true"></span>
-        <span class="status-text">LIVE</span>
+      <div class="time-signature" aria-hidden="true">
+        <span>3</span>
+        <span>4</span>
       </div>
     </header>
 
-    <!-- 核心互動播放/生成區塊 -->
-    <main class="content">
-      <section class="hero-card">
-        <div class="card-border-line" aria-hidden="true"></div>
-        <p class="movement-tag">MOVEMENT NO. 1 IN C MINOR</p>
-        <h1 class="main-heading">Algorithmic Elegance</h1>
-        <p class="description">
-          以古典對位法為底蘊，交融生成式神經網路。輕觸下方「發想」樂章，聆聽模型即時合成的琶音。
-        </p>
+    <!-- 樂派快速導覽標籤 (橫向滑動) -->
+    <nav class="era-nav" aria-label="樂派切換">
+      <button type="button" class="era-tab active" data-era="all">All</button>
+      <button type="button" class="era-tab" data-era="baroque">Baroque</button>
+      <button type="button" class="era-tab" data-era="classical">Classical</button>
+      <button type="button" class="era-tab" data-era="romantic">Romantic</button>
+    </nav>
 
-        <!-- 視覺化樂譜線條 -->
-        <div class="staff-visualizer" id="visualizer" aria-hidden="true">
-          <div class="staff-line"></div>
-          <div class="staff-line"></div>
-          <div class="staff-line"></div>
-          <div class="staff-line"></div>
-          <div class="staff-line"></div>
-          <div class="wave-bars" id="wave-bars">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-          </div>
+    <!-- 作曲家主展卡片 (可動態切換內容) -->
+    <main class="main-content">
+      <section class="composer-hero-card" id="composer-card">
+        <div class="gold-corner top-left" aria-hidden="true"></div>
+        <div class="gold-corner bottom-right" aria-hidden="true"></div>
+
+        <div class="composer-meta">
+          <span class="era-badge" id="composer-era">Romanticism</span>
+          <span class="years-label" id="composer-years">1810 – 1849</span>
         </div>
 
-        <button type="button" class="generate-btn" id="generate-btn" aria-label="生成古典樂章">
-          <span class="btn-icon" aria-hidden="true">♪</span>
-          <span class="btn-text">Generate Cadence</span>
+        <h2 class="composer-name" id="composer-name">Frédéric Chopin</h2>
+        <p class="composer-subname" id="composer-subname">鋼琴詩人 • 蕭邦</p>
+
+        <!-- 裝飾五線譜線條 -->
+        <div class="staff-divider" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <p class="composer-bio" id="composer-bio">
+          將浪漫主義鋼琴技術推向詩意巔峰，作品中飽含夜曲的靜謐、圓舞曲的高雅與波蘭舞曲的沉痛鄉愁。
+        </p>
+
+        <!-- 代表曲目精選 -->
+        <div class="key-works">
+          <span class="works-title">Representative Works</span>
+          <ul class="works-list" id="works-list">
+            <li>Nocturne in E-flat major, Op. 9 No. 2</li>
+            <li>Ballade No. 1 in G minor, Op. 23</li>
+            <li>Fantaisie-Impromptu, Op. 66</li>
+          </ul>
+        </div>
+
+        <!-- 試聽主題動機按鈕 (觸發 Web Audio 古典和弦音質) -->
+        <button type="button" class="play-motif-btn" id="play-motif-btn" aria-label="聆聽蕭邦夜曲代表和弦動機">
+          <span class="btn-icon" aria-hidden="true">♫</span>
+          <span class="btn-text" id="motif-btn-text">Listen to Nocturne Motif</span>
         </button>
       </section>
 
-      <!-- 樂章專案卡片列表（修正 Movemebts 拼字與無障礙標籤） -->
-      <section class="archive-section">
-        <h2 class="section-title"><span aria-hidden="true">✦</span> Curated Movements</h2>
-        
-        <div class="track-item" role="button" tabindex="0" data-notes="261.63,329.63,392.00,523.25" aria-label="播放第一樂章：Prelude in AI-Minor">
-          <div class="track-number" aria-hidden="true">I</div>
-          <div class="track-info">
-            <h3>Prelude in AI-Minor</h3>
-            <p>Diffusion Model • 60 BPM • Piano Solo</p>
-          </div>
-          <div class="track-action" aria-hidden="true">♫</div>
-        </div>
-
-        <div class="track-item" role="button" tabindex="0" data-notes="220.00,277.18,329.63,440.00" aria-label="播放第二樂章：Nocturne d'Algorithme">
-          <div class="track-number" aria-hidden="true">II</div>
-          <div class="track-info">
-            <h3>Nocturne d'Algorithme</h3>
-            <p>Transformer V2 • Rubato • Strings & Keys</p>
-          </div>
-          <div class="track-action" aria-hidden="true">♫</div>
+      <!-- 作曲家選擇器清單 -->
+      <section class="composers-selector-section">
+        <h3 class="section-heading"><span aria-hidden="true">✦</span> Maestro Gallery</h3>
+        <div class="composer-chips-grid" id="composers-grid">
+          <!-- 由 JS 動態注入或靜態渲染 -->
         </div>
       </section>
     </main>
 
+    <!-- 底部說明 -->
     <footer class="footer">
-      <p class="footer-text">Fine-tuned with Classical Harmony • 2026</p>
+      <div class="footer-pedal-mark" aria-hidden="true">𝄠 ──────── *</div>
+      <p class="footer-desc">Curated for Classical Piano Enthusiasts</p>
     </footer>
   </div>
 
