@@ -1,0 +1,7 @@
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5efe6;font-family:Georgia,"Noto Serif TC",serif;color:#1e3a2f}
+.card{width:min(90vw,380px);padding:2rem;text-align:center;border:1px solid #c9a227;border-radius:16px;background:#fffdf8}
+.staff{height:60px;border-block:1px solid #c9a227;margin:1rem 0;position:relative;overflow:hidden}
+.note{position:absolute;left:30%;font-size:2rem;color:#c9a227;animation:float 4s linear infinite}
+.note:nth-child(2){left:60%;animation-delay:2s}
+@keyframes float{from{transform:translateY(40px);opacity:0}50%{opacity:1}to{transform:translateY(-20px);opacity:0}}
+button{background:#1e3a2f;color:#f5efe6;border:0;padding:.7rem 2rem;border-radius:999px;font-size:1rem}
