@@ -1,7 +1,7 @@
 :root {
   --bg-core: #0c0e12;
-  --bg-gradient: radial-gradient(circle at 50% 12%, #191e28 0%, #0c0e12 85%);
-  --card-surface: rgba(22, 27, 36, 0.82);
+  --bg-gradient: radial-gradient(ellipse at 50% 12%, #191e28 0%, #0c0e12 85%);
+  --card-surface: rgba(22, 27, 36, 0.85);
   --gold-primary: #d4af37;
   --gold-light: #f7e7be;
   --gold-glow: rgba(212, 175, 55, 0.25);
@@ -12,19 +12,25 @@
   --font-display: 'Cinzel', serif;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  background-color: var(--bg-core);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
-  background: var(--bg-core);
-  background-image: var(--bg-gradient);
+  background: var(--bg-core) var(--bg-gradient) no-repeat;
   color: var(--ivory-base);
   font-family: var(--font-serif);
   min-height: 100vh;
+  min-height: 100dvh; /* 適配動態網址列高度 */
   position: relative;
   overflow-x: hidden;
   padding-top: env(safe-area-inset-top, 0px);
@@ -38,6 +44,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   z-index: 0;
   opacity: 0.45;
@@ -52,6 +59,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* 頁頭 */
@@ -106,7 +114,7 @@ body {
   -webkit-user-select: none;
 }
 
-/* 樂派橫向標籤列 (強化滾動體驗與相容性) */
+/* 樂派橫向標籤列 */
 .era-scroller {
   display: flex;
   gap: 8px;
@@ -119,6 +127,8 @@ body {
 
 .era-scroller::-webkit-scrollbar {
   display: none;
+  width: 0;
+  height: 0;
 }
 
 .era-pill {
@@ -168,13 +178,14 @@ body {
   will-change: opacity, transform;
 }
 
-/* 典雅邊角裝飾 */
+/* 典雅邊角花紋 */
 .card-filigree {
   position: absolute;
   width: 14px;
   height: 14px;
   border-color: var(--gold-primary);
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .card-filigree.top-left {
@@ -226,7 +237,7 @@ body {
   margin-bottom: 14px;
 }
 
-/* 五線譜裝飾線 (防點擊穿透保護) */
+/* 五線譜裝飾線 */
 .staff-divider {
   display: flex;
   flex-direction: column;
@@ -241,7 +252,7 @@ body {
   display: block;
   width: 100%;
   height: 1px;
-  background: var(--gold-primary);
+  background-color: var(--gold-primary);
 }
 
 /* 引言 */
