@@ -2,8 +2,8 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>The Classical Opus • 古典鋼琴家巡禮</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Classical Opus • 古典鋼琴家典藏巡禮</title>
   <!-- Google Fonts: Cormorant Garamond & Cinzel -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,78 +14,93 @@
   <!-- 背景飄浮古典音符 Canvas -->
   <canvas id="ambient-canvas" aria-hidden="true"></canvas>
 
-  <div class="mobile-layout">
-    <!-- 古典標頭 -->
-    <header class="header">
-      <div class="clef" aria-hidden="true">𝄞</div>
-      <div class="header-titles">
-        <span class="eyebrow">PIANO REPERTOIRE ARCHIVE</span>
-        <h1 class="main-title">THE CLASSICAL OPUS</h1>
-      </div>
-      <div class="meter" aria-hidden="true">
-        <span>4</span>
-        <span>4</span>
+  <div class="site-wrapper">
+    <!-- 桌面頂部典雅導航/標頭 -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand-group">
+          <span class="clef-symbol" aria-hidden="true">𝄞</span>
+          <div class="brand-text">
+            <span class="sub-label">PIANO REPERTOIRE ARCHIVE</span>
+            <h1 class="main-title">THE CLASSICAL OPUS</h1>
+          </div>
+        </div>
+
+        <div class="header-ornament" aria-hidden="true">
+          <div class="meter-symbol">
+            <span>4</span>
+            <span>4</span>
+          </div>
+          <div class="tempo-marking">Andante con moto</div>
+        </div>
       </div>
     </header>
 
-    <!-- 樂派篩選列 (符合 WAI-ARIA tablist 規範) -->
-    <nav class="era-scroller" role="tablist" aria-label="古典樂派分類導覽">
-      <button type="button" class="era-pill active" role="tab" aria-selected="true" data-era="all">All Eras</button>
-      <button type="button" class="era-pill" role="tab" aria-selected="false" data-era="baroque">Baroque</button>
-      <button type="button" class="era-pill" role="tab" aria-selected="false" data-era="classical">Classical</button>
-      <button type="button" class="era-pill" role="tab" aria-selected="false" data-era="romantic">Romantic</button>
-      <button type="button" class="era-pill" role="tab" aria-selected="false" data-era="impressionism">Impressionism</button>
-    </nav>
+    <!-- 主內容區：雙欄典雅排版 -->
+    <main class="main-container">
+      <!-- 左側：核心主展作曲家 -->
+      <section class="showcase-column">
+        <article class="composer-card" id="composer-showcase">
+          <div class="card-filigree top-left" aria-hidden="true"></div>
+          <div class="card-filigree bottom-right" aria-hidden="true"></div>
 
-    <!-- 核心作曲家展卡 -->
-    <main class="content-body">
-      <article class="composer-showcase" id="composer-showcase">
-        <div class="card-filigree top-left" aria-hidden="true"></div>
-        <div class="card-filigree bottom-right" aria-hidden="true"></div>
+          <div class="card-meta">
+            <span class="era-tag" id="composer-era-tag">Romanticism</span>
+            <span class="lifespan-tag" id="composer-lifespan">1810 – 1849</span>
+          </div>
 
-        <div class="composer-header">
-          <span class="era-tag" id="composer-era-tag">Romanticism</span>
-          <span class="timeline-tag" id="composer-lifespan">1810 – 1849</span>
-        </div>
+          <h2 class="composer-name" id="composer-name">Frédéric Chopin</h2>
+          <p class="composer-title" id="composer-title">鋼琴詩人 • 蕭邦</p>
 
-        <h2 class="composer-name" id="composer-name">Frédéric Chopin</h2>
-        <p class="composer-subtitle" id="composer-title">鋼琴詩人 • 蕭邦</p>
+          <!-- 裝飾五線譜線條 -->
+          <div class="staff-divider" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
 
-        <!-- 五線譜裝飾分隔線 -->
-        <div class="staff-divider" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
+          <blockquote class="composer-quote" id="composer-quote">
+            「簡約是成熟的最終形式；在歷經一切繁複之後，藝術回歸於極致的純粹。」
+          </blockquote>
 
-        <blockquote class="composer-quote" id="composer-quote">
-          「簡約是成熟的最終形式；在歷經一切繁複之後，藝術回歸於極致的純粹。」
-        </blockquote>
+          <p class="composer-bio" id="composer-bio">
+            將浪漫主義鋼琴表現力推至詩意巔峰的大師。其作品深刻融合了夜曲的細緻織體、馬厝卡舞曲的鄉愁，以及練習曲中革命性的觸鍵哲學。
+          </p>
 
-        <p class="composer-biography" id="composer-bio">
-          將浪漫主義鋼琴表現力推至詩意巔峰的大師。其作品深刻融合了夜曲的細緻織體、馬厝卡舞曲的鄉愁，以及練習曲中革命性的觸鍵哲學。
-        </p>
-
-        <!-- 代表作品典藏 -->
-        <section class="masterpieces-block">
-          <h3 class="block-heading">Selected Masterpieces</h3>
-          <ul class="pieces-list" id="pieces-list">
-            <!-- 由 JS 動態注入安全 DOM 節點 -->
-          </ul>
-        </section>
-      </article>
-
-      <!-- 作曲家名錄選單 -->
-      <section class="archive-gallery">
-        <h3 class="gallery-heading"><span aria-hidden="true">✦</span> Maestro Gallery</h3>
-        <div class="maestro-grid" id="maestro-grid">
-          <!-- 由 JS 動態注入卡片清單 -->
-        </div>
+          <!-- 代表作品典藏 -->
+          <div class="repertoire-section">
+            <h3 class="section-label">Selected Masterpieces</h3>
+            <ul class="piece-list" id="pieces-list">
+              <!-- JS 動態組裝 -->
+            </ul>
+          </div>
+        </article>
       </section>
+
+      <!-- 右側：樂派過濾與作曲家畫廊清單 -->
+      <aside class="gallery-column">
+        <!-- 樂派篩選標籤列 -->
+        <nav class="era-filter-bar" role="tablist" aria-label="樂派分類篩選">
+          <button type="button" class="era-button active" role="tab" aria-selected="true" data-era="all">All</button>
+          <button type="button" class="era-button" role="tab" aria-selected="false" data-era="baroque">Baroque</button>
+          <button type="button" class="era-button" role="tab" aria-selected="false" data-era="classical">Classical</button>
+          <button type="button" class="era-button" role="tab" aria-selected="false" data-era="romantic">Romantic</button>
+          <button type="button" class="era-button" role="tab" aria-selected="false" data-era="impressionism">Impressionism</button>
+        </nav>
+
+        <div class="gallery-header">
+          <h3 class="gallery-title"><span aria-hidden="true">✦</span> Maestro Gallery</h3>
+          <span class="catalog-hint">點選卡片切換大師檔案</span>
+        </div>
+
+        <div class="maestro-grid" id="maestro-grid">
+          <!-- JS 動態渲染卡片清單 -->
+        </div>
+      </aside>
     </main>
 
-    <!-- 典雅頁尾 -->
-    <footer class="footer">
-      <div class="pedal-sign" aria-hidden="true">𝄠 ──────── *</div>
-      <p class="footer-caption">Curated for Classical Piano Enthusiasts • 2026</p>
+    <!-- 頁尾 -->
+    <footer class="site-footer">
+      <div class="pedal-ornament" aria-hidden="true">𝄠 ────────────────────────────── *</div>
+      <p class="footer-note">Curated for Classical Piano Enthusiasts • Dedicated to Pure Acoustic Aesthetics</p>
     </footer>
   </div>
 
