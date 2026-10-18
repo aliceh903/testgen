@@ -1,12 +1,14 @@
 :root {
-  --bg-dark: #0d0f12;
-  --card-bg: rgba(22, 26, 33, 0.75);
+  --bg-deep: #0b0d10;
+  --bg-gradient: radial-gradient(circle at 50% 15%, #181d26 0%, #0b0d10 80%);
+  --card-bg: rgba(22, 27, 36, 0.85);
   --gold-primary: #d4af37;
-  --gold-light: #f3e5ab;
-  --gold-glow: rgba(212, 175, 55, 0.35);
-  --ivory: #e8e3d9;
-  --ivory-muted: #9e9a93;
-  --line-gold: rgba(212, 175, 55, 0.2);
+  --gold-light: #f5e4b7;
+  --gold-dark: #8c7322;
+  --gold-glow: rgba(212, 175, 55, 0.28);
+  --ivory: #eae5db;
+  --ivory-dim: #a49f95;
+  --line-gold: rgba(212, 175, 55, 0.18);
   --font-serif: 'Cormorant Garamond', 'Georgia', serif;
   --font-display: 'Cinzel', serif;
 }
@@ -19,19 +21,19 @@
 }
 
 body {
-  background-color: var(--bg-dark);
+  background: var(--bg-deep);
+  background-image: var(--bg-gradient);
   color: var(--ivory);
   font-family: var(--font-serif);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  /* 支援手機安全區避讓 */
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* 背景 Canvas */
-#music-canvas {
+/* 漂浮音符背景 Canvas */
+#notes-canvas {
   position: fixed;
   top: 0;
   left: 0;
@@ -39,295 +41,336 @@ body {
   height: 100vh;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.6;
+  opacity: 0.45;
 }
 
 .mobile-container {
   position: relative;
   z-index: 1;
-  max-width: 430px;
+  max-width: 440px;
   margin: 0 auto;
-  padding: 24px 20px 40px;
+  padding: 20px 20px 36px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Header */
+/* 頁頭 */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 20px;
+  padding-bottom: 18px;
   border-bottom: 1px solid var(--line-gold);
 }
 
-.clef-symbol {
+.clef-box {
   font-size: 2.2rem;
   color: var(--gold-primary);
   line-height: 1;
-  text-shadow: 0 0 10px var(--gold-glow);
+  text-shadow: 0 0 12px var(--gold-glow);
   user-select: none;
 }
 
-.header-title {
-  display: flex;
-  flex-direction: column;
+.header-titles {
   text-align: center;
 }
 
-.header-title .subtitle {
+.collection-tag {
+  display: block;
   font-family: var(--font-display);
   font-size: 0.65rem;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.28em;
   color: var(--gold-light);
   opacity: 0.8;
 }
 
-.header-title .title {
+.brand-title {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.16em;
   color: var(--ivory);
 }
 
-.ai-status {
+.time-signature {
   display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.65rem;
-  font-family: var(--font-display);
+  flex-direction: column;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 0.85;
   color: var(--gold-primary);
-  letter-spacing: 0.1em;
+  opacity: 0.75;
+  user-select: none;
 }
 
-.ai-status .dot {
-  width: 6px;
-  height: 6px;
-  background-color: var(--gold-primary);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--gold-primary);
-  animation: pulse 2s infinite ease-in-out;
+/* 樂派切換橫條 */
+.era-nav {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 16px 0;
+  scrollbar-width: none;
 }
 
-/* Hero Card */
-.hero-card {
-  margin-top: 26px;
-  background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--line-gold);
-  border-radius: 12px;
-  padding: 28px 22px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+.era-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.era-tab {
+  background: rgba(212, 175, 55, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: var(--ivory-dim);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.era-tab.active,
+.era-tab:active {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: var(--gold-primary);
+  color: var(--gold-light);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+/* 作曲家主卡片 */
+.composer-hero-card {
   position: relative;
-  overflow: hidden;
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line-gold);
+  border-radius: 14px;
+  padding: 24px 20px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.card-border-line {
+/* 典雅邊角裝飾 */
+.gold-corner {
   position: absolute;
-  top: 0;
-  left: 10%;
-  width: 80%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+  width: 14px;
+  height: 14px;
+  border-color: var(--gold-primary);
+  pointer-events: none;
 }
 
-.movement-tag {
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  color: var(--gold-primary);
-  letter-spacing: 0.2em;
+.gold-corner.top-left {
+  top: 8px;
+  left: 8px;
+  border-top: 1px solid var(--gold-primary);
+  border-left: 1px solid var(--gold-primary);
+}
+
+.gold-corner.bottom-right {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 1px solid var(--gold-primary);
+  border-right: 1px solid var(--gold-primary);
+}
+
+.composer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 8px;
 }
 
-.main-heading {
+.era-badge {
   font-family: var(--font-display);
-  font-size: 1.7rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  color: var(--gold-light);
-  line-height: 1.25;
-  margin-bottom: 12px;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--gold-primary);
+  text-transform: uppercase;
 }
 
-.description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--ivory-muted);
+.years-label {
+  font-size: 0.85rem;
+  color: var(--ivory-dim);
   font-style: italic;
-  margin-bottom: 24px;
 }
 
-/* 五線譜視覺化展示 */
-.staff-visualizer {
-  position: relative;
-  height: 48px;
-  margin-bottom: 26px;
+.composer-name {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  color: var(--gold-light);
+  line-height: 1.2;
+}
+
+.composer-subname {
+  font-size: 0.95rem;
+  color: var(--ivory-dim);
+  margin-top: 2px;
+  margin-bottom: 14px;
+}
+
+/* 五線譜裝飾分隔線 */
+.staff-divider {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 4px 0;
+  height: 16px;
+  margin: 14px 0 18px;
+  opacity: 0.45;
 }
 
-.staff-line {
+.staff-divider span {
+  display: block;
   width: 100%;
   height: 1px;
-  background: var(--line-gold);
-}
-
-.wave-bars {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 18px;
-}
-
-.wave-bars .bar {
-  width: 2px;
-  height: 8px;
   background: var(--gold-primary);
-  border-radius: 2px;
-  transition: height 0.2s ease, opacity 0.2s ease;
-  opacity: 0.35;
-  will-change: height;
 }
 
-/* 激活狀態下的動態跳動 */
-.staff-visualizer.active .bar {
-  opacity: 0.9;
-  animation: dance 0.8s infinite alternate ease-in-out;
+.composer-bio {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ivory);
+  margin-bottom: 18px;
 }
 
-.staff-visualizer.active .bar:nth-child(1) { animation-delay: 0.05s; }
-.staff-visualizer.active .bar:nth-child(2) { animation-delay: 0.18s; }
-.staff-visualizer.active .bar:nth-child(3) { animation-delay: 0.32s; }
-.staff-visualizer.active .bar:nth-child(4) { animation-delay: 0.46s; }
-.staff-visualizer.active .bar:nth-child(5) { animation-delay: 0.22s; }
-.staff-visualizer.active .bar:nth-child(6) { animation-delay: 0.38s; }
-.staff-visualizer.active .bar:nth-child(7) { animation-delay: 0.52s; }
+/* 代表曲清單 */
+.key-works {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border-left: 2px solid var(--gold-primary);
+}
 
-/* 生成按鈕 */
-.generate-btn {
+.works-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--gold-primary);
+  margin-bottom: 6px;
+}
+
+.works-list {
+  list-style: none;
+}
+
+.works-list li {
+  font-size: 0.88rem;
+  color: var(--ivory);
+  line-height: 1.5;
+  position: relative;
+  padding-left: 14px;
+}
+
+.works-list li::before {
+  content: "•";
+  position: absolute;
+  left: 2px;
+  color: var(--gold-primary);
+}
+
+/* 試聽動機按鈕 */
+.play-motif-btn {
   width: 100%;
-  padding: 14px 18px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+  padding: 13px 18px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
   border: 1px solid var(--gold-primary);
-  border-radius: 30px;
+  border-radius: 28px;
   color: var(--gold-light);
   font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.18em;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.25s ease;
   user-select: none;
 }
 
-.generate-btn:active {
+.play-motif-btn:active {
   transform: scale(0.97);
-  background: rgba(212, 175, 55, 0.28);
-  box-shadow: 0 0 18px var(--gold-glow);
+  background: rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 16px var(--gold-glow);
 }
 
 .btn-icon {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
-/* 樂章列表 */
-.archive-section {
-  margin-top: 32px;
+/* 作曲家快速切換清單 */
+.composers-selector-section {
+  margin-top: 28px;
 }
 
-.section-title {
+.section-heading {
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   letter-spacing: 0.18em;
   color: var(--gold-primary);
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.track-item {
-  display: flex;
-  align-items: center;
-  padding: 14px 16px;
-  background: rgba(22, 26, 33, 0.5);
-  border: 1px solid rgba(212, 175, 55, 0.12);
+.composer-chips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.composer-chip {
+  padding: 12px 14px;
+  background: rgba(22, 27, 36, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.14);
   border-radius: 8px;
-  margin-bottom: 10px;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
-  user-select: none;
+  transition: all 0.2s ease;
+  text-align: left;
 }
 
-.track-item:active {
-  background: rgba(212, 175, 55, 0.12);
+.composer-chip.active {
   border-color: var(--gold-primary);
-  transform: scale(0.99);
+  background: rgba(212, 175, 55, 0.12);
 }
 
-.track-number {
+.chip-name {
+  display: block;
   font-family: var(--font-display);
-  font-size: 1rem;
-  color: var(--gold-primary);
-  width: 32px;
-}
-
-.track-info {
-  flex: 1;
-}
-
-.track-info h3 {
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 0.85rem;
   color: var(--ivory);
-  margin-bottom: 2px;
 }
 
-.track-info p {
-  font-size: 0.75rem;
-  color: var(--ivory-muted);
+.chip-era {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ivory-dim);
+  margin-top: 2px;
 }
 
-.track-action {
-  font-size: 1.1rem;
-  color: var(--gold-light);
-  opacity: 0.7;
-}
-
-/* Footer */
+/* 頁尾 */
 .footer {
   margin-top: auto;
-  padding-top: 30px;
+  padding-top: 32px;
   text-align: center;
 }
 
-.footer-text {
-  font-size: 0.75rem;
-  color: var(--ivory-muted);
-  letter-spacing: 0.05em;
+.footer-pedal-mark {
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-primary);
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+
+.footer-desc {
+  font-size: 0.72rem;
+  color: var(--ivory-dim);
   font-style: italic;
-}
-
-/* 動畫設定 */
-@keyframes pulse {
-  0%, 100% { opacity: 0.3; transform: scale(0.9); }
-  50% { opacity: 1; transform: scale(1.15); }
-}
-
-@keyframes dance {
-  0% { height: 6px; }
-  100% { height: 32px; }
+  letter-spacing: 0.05em;
 }
