@@ -25,6 +25,9 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  /* 支援手機安全區避讓 */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* 背景 Canvas */
@@ -32,8 +35,8 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 0;
   opacity: 0.6;
@@ -42,7 +45,7 @@ body {
 .mobile-container {
   position: relative;
   z-index: 1;
-  max-width: 430px; /* 手機專用舒適寬度 */
+  max-width: 430px;
   margin: 0 auto;
   padding: 24px 20px 40px;
   display: flex;
@@ -64,6 +67,7 @@ body {
   color: var(--gold-primary);
   line-height: 1;
   text-shadow: 0 0 10px var(--gold-glow);
+  user-select: none;
 }
 
 .header-title {
@@ -107,11 +111,12 @@ body {
   animation: pulse 2s infinite ease-in-out;
 }
 
-/* Hero Section / Card */
+/* Hero Card */
 .hero-card {
   margin-top: 26px;
   background: var(--card-bg);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--line-gold);
   border-radius: 12px;
   padding: 28px 22px;
@@ -186,24 +191,27 @@ body {
 
 .wave-bars .bar {
   width: 2px;
-  height: 12px;
+  height: 8px;
   background: var(--gold-primary);
   border-radius: 2px;
-  transition: height 0.2s ease, opacity 0.2s;
+  transition: height 0.2s ease, opacity 0.2s ease;
   opacity: 0.35;
+  will-change: height;
 }
 
+/* 激活狀態下的動態跳動 */
 .staff-visualizer.active .bar {
   opacity: 0.9;
-  animation: dance 1s infinite alternate ease-in-out;
+  animation: dance 0.8s infinite alternate ease-in-out;
 }
 
-.staff-visualizer.active .bar:nth-child(2) { animation-delay: 0.15s; }
-.staff-visualizer.active .bar:nth-child(3) { animation-delay: 0.3s; }
-.staff-visualizer.active .bar:nth-child(4) { animation-delay: 0.45s; }
-.staff-visualizer.active .bar:nth-child(5) { animation-delay: 0.2s; }
-.staff-visualizer.active .bar:nth-child(6) { animation-delay: 0.35s; }
-.staff-visualizer.active .bar:nth-child(7) { animation-delay: 0.5s; }
+.staff-visualizer.active .bar:nth-child(1) { animation-delay: 0.05s; }
+.staff-visualizer.active .bar:nth-child(2) { animation-delay: 0.18s; }
+.staff-visualizer.active .bar:nth-child(3) { animation-delay: 0.32s; }
+.staff-visualizer.active .bar:nth-child(4) { animation-delay: 0.46s; }
+.staff-visualizer.active .bar:nth-child(5) { animation-delay: 0.22s; }
+.staff-visualizer.active .bar:nth-child(6) { animation-delay: 0.38s; }
+.staff-visualizer.active .bar:nth-child(7) { animation-delay: 0.52s; }
 
 /* 生成按鈕 */
 .generate-btn {
@@ -221,14 +229,13 @@ body {
   justify-content: center;
   gap: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  transition: transform 0.2s ease, background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
 }
 
 .generate-btn:active {
-  transform: scale(0.98);
-  background: rgba(212, 175, 55, 0.25);
+  transform: scale(0.97);
+  background: rgba(212, 175, 55, 0.28);
   box-shadow: 0 0 18px var(--gold-glow);
 }
 
@@ -260,12 +267,15 @@ body {
   border: 1px solid rgba(212, 175, 55, 0.12);
   border-radius: 8px;
   margin-bottom: 10px;
-  transition: all 0.25s ease;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.15s ease;
+  user-select: none;
 }
 
 .track-item:active {
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(212, 175, 55, 0.12);
   border-color: var(--gold-primary);
+  transform: scale(0.99);
 }
 
 .track-number {
@@ -311,7 +321,7 @@ body {
   font-style: italic;
 }
 
-/* 動畫 */
+/* 動畫設定 */
 @keyframes pulse {
   0%, 100% { opacity: 0.3; transform: scale(0.9); }
   50% { opacity: 1; transform: scale(1.15); }
